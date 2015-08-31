@@ -75,6 +75,7 @@ class Album extends SluggedModel
     protected $slug_lower = false;
 
     // Do not allow these slugs
+    // Will instead use photos1, etc.
     protected $reserved_slugs = ['photos'];
 
     // Completely override slug generation
@@ -84,4 +85,11 @@ class Album extends SluggedModel
     }
 }
 ```
+
+By default, `slugify` calls `Slugger::slugify`. This is a helpful method
+that you can use in other places if you need it.
+
+### Advanced
+
+I recommend using [Router binding](http://andrew.cool/blog/54/Router-Binding-in-Laravel)
 
