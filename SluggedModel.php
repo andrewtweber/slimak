@@ -6,13 +6,6 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 abstract class SluggedModel extends Eloquent
 {
     /**
-     * Which attribute to slugify
-     *
-     * @var string
-     */
-    protected $slug_base = 'name';
-
-    /**
      * Convert to lowercase?
      *
      * @var bool
@@ -38,14 +31,24 @@ abstract class SluggedModel extends Eloquent
     }
 
     /**
-     * Create base slug
+     * Base string which is slugged
+     *
+     * @return string
+     */
+    protected function slugBase()
+    {
+        return $this->attributes['name'];
+    }
+
+    /**
+     * Slugged version of base string
      * Separated into protected method so that child classes can easily override
      *
      * @return string
      */
     protected function slugify()
     {
-        return Slugger::slugify($this->attributes[$this->slug_base], $this->slug_lower);
+        return Slugger::slugify($this->slugBase(), $this->slug_lower);
     }
 
     /**
