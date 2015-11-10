@@ -68,9 +68,6 @@ See below for an example.
 ```php
 class Album extends SluggedModel
 {
-    // Slug this column instead of 'name'
-    protected $slug_base = 'title';
-
     // Do not convert to lowercase
     protected $slug_lower = false;
 
@@ -78,7 +75,13 @@ class Album extends SluggedModel
     // Will instead use photos1, etc.
     protected $reserved_slugs = ['photos'];
 
-    // Completely override slug generation
+    // Slug this instead of the "name" column
+    protected function slugBase()
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+
+    // Completely override how the slug is generated
     protected function slugify()
     {
         return strtolower($this->title);
