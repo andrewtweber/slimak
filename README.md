@@ -37,17 +37,17 @@ If you save an album, and it does not yet have a slug, it will
 generate a new one:
 
 ```php
-$album = new Album(['name' => 'Test']);
+$album = new Album(['name' => 'My Test Album']);
 $album->save();
 
-echo $album->slug; // 'test'
+echo $album->slug; // 'my-test-album'
 ```
 
 In case of duplicates, it will append a counter, e.g.:
 
 ```php
-$album2 = Album::create(['name' => 'Test']);
-echo $album2->slug; // 'test1'
+$album2 = Album::create(['name' => 'My Test Album']);
+echo $album2->slug; // 'my-test-album1'
 ```
 
 You can also easily fetch models based on their slug:
