@@ -53,10 +53,40 @@ echo $album2->slug; // 'my-test-album1'
 You can also easily fetch models based on their slug:
 
 ```php
-$album = Album::findBySlug('test');
+$album = Album::findBySlug('my-test-album');
 ```
 
-If the slug does not exist, it will throw an `Illuminate\Database\Eloquent\ModelNotFoundException;`
+Similarly, you can check for the model and throw an
+`Illuminate\Database\Eloquent\ModelNotFoundException;` if it doesn't exist
+
+```php
+$album = Album::findBySlugOrFail('does-not-exist');
+```
+
+Note: the previous 2 methods do not include "trashed" models (soft deleted).
+
+You can use this query scope to have more control over retrieving:
+
+```php
+$album = Album::whereSlug('my-test-album')->withTrashed()->first();
+```
+
+#### Case-Sensitive Slugs
+
+If your slugs are case-sensitive, modify your model to also use the
+provided trait.
+
+```php
+class BlogPost extends SluggedModel
+{
+    use CaseSensitiveSlug;
+
+    protected $slug_lowercase = false;
+}
+```
+
+Make sure to also disable converting to lowercase, if you're using the
+default slugger.
 
 ### Configuration
 
@@ -68,11 +98,17 @@ See below for an example.
 ```php
 class Album extends SluggedModel
 {
-    // Do not convert to lowercase
-    protected $slug_lower = false;
+    // Name of the column to store slugs. Default 'slug'
+    protected $slug_column = 'url';
 
-    // Do not allow these slugs
-    // Will instead use photos1, etc.
+    // Convert to lowercase? Default true
+    protected $slug_lowercase = false;
+
+    // Character(s) to separate words. Default '-' (hyphen)
+    protected $slug_glue = '_';
+
+    // Do not allow these slugs; will instead use photos1, etc.
+    // Default []
     protected $reserved_slugs = ['photos'];
 
     // Slug this instead of the "name" column
@@ -84,7 +120,7 @@ class Album extends SluggedModel
     // Completely override how the slug is generated
     protected function slugify()
     {
-        return strtolower($this->title);
+        return str_random(6);
     }
 }
 ```

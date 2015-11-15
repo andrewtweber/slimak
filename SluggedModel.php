@@ -1,16 +1,30 @@
-<?php namespace App;
+<?php namespace Slimak;
 
-use App\Support\Slugger;
+use Slimak\Support\Slugger;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
 abstract class SluggedModel extends Eloquent
 {
     /**
+     * Name of column to store slugs in
+     *
+     * @var string
+     */
+    protected $slug_column = 'slug';
+
+    /**
      * Convert to lowercase?
      *
      * @var bool
      */
-    protected $slug_lower = true;
+    protected $slug_lowercase = true;
+
+    /**
+     * The character to separate words
+     *
+     * @var string
+     */
+    protected $slug_glue = '-';
 
     /**
      * Slugs which are not allowed
@@ -27,7 +41,19 @@ abstract class SluggedModel extends Eloquent
      */
     public static function findBySlug($slug)
     {
-        return self::where('slug', '=', $slug)->firstOrFail();
+        return self::whereSlug($slug)->first();
+    }
+
+    /**
+     * Get the first record with the given slug or throw an exception
+     *
+     * @param  string  $slug
+     * @return static
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     */
+    public static function findBySlugOrFail($slug)
+    {
+        return self::whereSlug($slug)->firstOrFail();
     }
 
     /**
@@ -48,7 +74,19 @@ abstract class SluggedModel extends Eloquent
      */
     protected function slugify()
     {
-        return Slugger::slugify($this->slugBase(), $this->slug_lower);
+        return Slugger::slugify($this->slugBase(), $this->slug_lowercase, $this->slug_glue);
+    }
+
+    /**
+     * Query scope
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  string  $slug
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWhereSlug($query, $slug)
+    {
+        return $query->where($this->slug_column, '=', $slug);
     }
 
     /**
@@ -66,13 +104,13 @@ abstract class SluggedModel extends Eloquent
                 $slug = $base_slug . '-' . $counter;
             }
 
-            $exists = (in_array($slug, $this->reserved_slugs) || self::where('slug', '=', $slug)->first()); // ->withTrashed
+            $exists = (in_array($slug, $this->reserved_slugs) || self::whereSlug($slug)->first()); // ->withTrashed
 
             $counter++;
 
         } while ($exists);
 
-        $this->slug = $slug;
+        $this->attributes[$this->slug_column] = $slug;
     }
 
     /**
@@ -83,7 +121,7 @@ abstract class SluggedModel extends Eloquent
      */
     public function save(array $options = [])
     {
-        if ($this->slug === null) {
+        if ($this->attributes[$this->slug_column] === null) {
             $this->generateSlug();
         }
 
