@@ -1,6 +1,7 @@
 <?php namespace Slimak;
 
 use Slimak\Support\Slugger;
+use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
 abstract class SluggedModel extends Eloquent
@@ -34,9 +35,20 @@ abstract class SluggedModel extends Eloquent
     protected $reserved_slugs = [];
 
     /**
+     * Column used for model routing
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return $this->slug_column;
+    }
+
+    /**
      * Get the first record with the given slug
      *
-     * @param  string  $slug
+     * @param string $slug
+     *
      * @return static
      */
     public static function findBySlug($slug)
@@ -47,7 +59,8 @@ abstract class SluggedModel extends Eloquent
     /**
      * Get the first record with the given slug or throw an exception
      *
-     * @param  string  $slug
+     * @param string $slug
+     *
      * @return static
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      */
@@ -80,9 +93,10 @@ abstract class SluggedModel extends Eloquent
     /**
      * Query scope
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  string  $slug
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param QueryBuilder $query
+     * @param string       $slug
+     *
+     * @return QueryBuilder
      */
     public function scopeWhereSlug($query, $slug)
     {
@@ -99,6 +113,10 @@ abstract class SluggedModel extends Eloquent
         $slug = $base_slug = $this->slugify();
         $counter = 0;
 
+        if (! $base_slug) {
+            $this->setSlug(null);
+        }
+
         do {
             if ($counter > 0) {
                 $slug = $base_slug . '-' . $counter;
@@ -110,22 +128,39 @@ abstract class SluggedModel extends Eloquent
 
         } while ($exists);
 
-        $this->attributes[$this->slug_column] = $slug;
+        $this->setSlug($slug);
     }
 
     /**
      * Override save method to generate a slug
      *
-     * @param  array  $options
+     * @param array $options
+     *
      * @return bool
      */
     public function save(array $options = [])
     {
-        if ($this->attributes[$this->slug_column] === null) {
+        if ($this->getSlug() === null) {
             $this->generateSlug();
         }
 
         return parent::save();
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->attributes[$this->slug_column];
+    }
+
+    /**
+     * @param string $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->attributes[$this->slug_column] = $slug;
     }
 }
 
