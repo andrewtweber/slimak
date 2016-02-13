@@ -152,7 +152,7 @@ abstract class SluggedModel extends Eloquent
      */
     public function getSlug()
     {
-        return $this->attributes[$this->slug_column];
+        return $this->attributes[$this->slug_column] ?? null;
     }
 
     /**
