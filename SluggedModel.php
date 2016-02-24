@@ -76,7 +76,7 @@ abstract class SluggedModel extends Eloquent
      */
     protected function slugBase()
     {
-        return $this->attributes['name'];
+        return $this->attributes['name'] ?? null;
     }
 
     /**
@@ -115,6 +115,7 @@ abstract class SluggedModel extends Eloquent
 
         if (! $base_slug) {
             $this->setSlug(null);
+            return;
         }
 
         do {
