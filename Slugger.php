@@ -7,7 +7,7 @@ class Slugger
      * Then replace multiple slashes with single slash and trim slashes
      *
      * @param  string  $string
-     * @param  bool  $convert_to_lowercase;
+     * @param  bool    $convert_to_lowercase
      * @param  string  $glue
      * @return string
      */
@@ -31,4 +31,3 @@ class Slugger
         return $string;
     }
 }
-
