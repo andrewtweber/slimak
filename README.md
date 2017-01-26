@@ -8,6 +8,8 @@ Given how small this package is, and how often people extend
 Eloquent, I think it's best to simply copy and paste the files
 and modify them as you need.
 
+Might convert it to a trait and submit to packagist in the future.
+
 ### Usage
 
 Basic usage. You simply need to extend the `SluggedModel` class.
