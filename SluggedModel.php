@@ -3,6 +3,7 @@
 use Slimak\Support\Slugger;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 abstract class SluggedModel extends Eloquent
 {
@@ -104,6 +105,17 @@ abstract class SluggedModel extends Eloquent
     }
 
     /**
+     * @return bool
+     */
+    protected function usesSoftDeleteTrait()
+    {
+        return in_array(
+            SoftDeletes::class,
+            array_keys((new \ReflectionClass(self::class))->getTraits())
+        );
+    }
+
+    /**
      * Generate a new slug and verify that it is unique
      *
      * @return void
@@ -111,6 +123,7 @@ abstract class SluggedModel extends Eloquent
     public function generateSlug()
     {
         $slug = $base_slug = $this->slugify();
+
         $counter = 0;
 
         if (! $base_slug) {
@@ -123,10 +136,18 @@ abstract class SluggedModel extends Eloquent
                 $slug = $base_slug . '-' . $counter;
             }
 
-            $exists = (in_array($slug, $this->reserved_slugs) || self::whereSlug($slug)->first()); // ->withTrashed
+            $query = self::whereSlug($slug);
+
+            if ($this->exists) {
+                $query = $query->where($this->getKeyName(), '!=', $this->getKey());
+            }
+            if ($this->usesSoftDeleteTrait()) {
+                $query = $query->withTrashed();
+            }
+
+            $exists = (in_array($slug, $this->reserved_slugs) || $query->first());
 
             $counter++;
-
         } while ($exists);
 
         $this->setSlug($slug);
@@ -162,6 +183,25 @@ abstract class SluggedModel extends Eloquent
     public function setSlug($slug)
     {
         $this->attributes[$this->slug_column] = $slug;
+    }
+
+    /**
+     * Free up slug when deleting
+     */
+    protected function clearSlug()
+    {
+        $this->attributes[$this->slug_column] = null;
+    }
+
+    /**
+     * @return bool|null
+     * @throws \Exception
+     */
+    public function delete()
+    {
+        $this->clearSlug();
+
+        return parent::delete();
     }
 }
 
