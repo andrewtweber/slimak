@@ -1,39 +1,38 @@
-<?php namespace Slimak;
+<?php
+namespace Slimak;
 
-use Slimak\Support\Slugger;
-use Illuminate\Database\Eloquent\Builder as QueryBuilder;
-use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Slimak\Support\Slugger;
 
-abstract class SluggedModel extends Eloquent
+/**
+ * Class SluggedModel
+ *
+ * @package Slimak
+ */
+abstract class SluggedModel extends Model
 {
     /**
      * Name of column to store slugs in
-     *
-     * @var string
      */
-    protected $slug_column = 'slug';
+    protected string $slug_column = 'slug';
 
     /**
      * Convert to lowercase?
-     *
-     * @var bool
      */
-    protected $slug_lowercase = true;
+    protected bool $slug_lowercase = true;
 
     /**
      * The character to separate words
-     *
-     * @var string
      */
-    protected $slug_glue = '-';
+    protected string $slug_glue = '-';
 
     /**
      * Slugs which are not allowed
-     *
-     * @var array
      */
-    protected $reserved_slugs = [];
+    protected array $reserved_slugs = [];
 
     /**
      * Column used for model routing
@@ -63,7 +62,7 @@ abstract class SluggedModel extends Eloquent
      * @param string $slug
      *
      * @return static
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws ModelNotFoundException
      */
     public static function findBySlugOrFail($slug)
     {
@@ -73,9 +72,9 @@ abstract class SluggedModel extends Eloquent
     /**
      * Base string which is slugged
      *
-     * @return string
+     * @return string|null
      */
-    protected function slugBase()
+    protected function slugBase(): ?string
     {
         return $this->attributes['name'] ?? null;
     }
@@ -84,9 +83,9 @@ abstract class SluggedModel extends Eloquent
      * Slugged version of base string
      * Separated into protected method so that child classes can easily override
      *
-     * @return string
+     * @return string|null
      */
-    protected function slugify()
+    protected function slugify(): ?string
     {
         return Slugger::slugify($this->slugBase(), $this->slug_lowercase, $this->slug_glue);
     }
@@ -94,20 +93,18 @@ abstract class SluggedModel extends Eloquent
     /**
      * Query scope
      *
-     * @param QueryBuilder $query
-     * @param string       $slug
-     *
-     * @return QueryBuilder
+     * @param Builder $query
+     * @param string  $slug
      */
-    public function scopeWhereSlug($query, $slug)
+    public function scopeWhereSlug(Builder $query, string $slug)
     {
-        return $query->where($this->slug_column, '=', $slug);
+        $query->where($this->slug_column, '=', $slug);
     }
 
     /**
      * @return bool
      */
-    protected function usesSoftDeleteTrait()
+    protected function usesSoftDeleteTrait(): bool
     {
         return in_array(
             SoftDeletes::class,
@@ -117,8 +114,6 @@ abstract class SluggedModel extends Eloquent
 
     /**
      * Generate a new slug and verify that it is unique
-     *
-     * @return void
      */
     public function generateSlug()
     {
@@ -166,21 +161,21 @@ abstract class SluggedModel extends Eloquent
             $this->generateSlug();
         }
 
-        return parent::save();
+        return parent::save($options);
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getSlug()
+    public function getSlug(): ?string
     {
         return $this->attributes[$this->slug_column] ?? null;
     }
 
     /**
-     * @param string $slug
+     * @param string|null $slug
      */
-    public function setSlug($slug)
+    public function setSlug(?string $slug)
     {
         $this->attributes[$this->slug_column] = $slug;
     }

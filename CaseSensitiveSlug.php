@@ -1,15 +1,20 @@
 <?php namespace Slimak;
 
+use Illuminate\Database\Eloquent\Builder;
+
+/**
+ * Trait CaseSensitiveSlug
+ *
+ * @package Slimak
+ */
 trait CaseSensitiveSlug
 {
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  Builder  $query
      * @param  string  $slug
-     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeWhereSlug($query, $slug)
     {
-        return $query->whereRaw('BINARY `slug` = ?', [$slug]);
+        $query->whereRaw('BINARY `slug` = ?', [$slug]);
     }
 }
-

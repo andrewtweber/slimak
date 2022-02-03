@@ -1,19 +1,29 @@
-<?php namespace Slimak\Support;
+<?php
 
+namespace Slimak\Support;
+
+/**
+ * Class Slugger
+ *
+ * @package Slimak\Support
+ */
 class Slugger
 {
     /**
      * Replace non-alphanumeric characters with slashes
      * Then replace multiple slashes with single slash and trim slashes
      *
-     * @param string $string
-     * @param bool   $convert_to_lowercase
-     * @param string $glue
+     * @param string|null $string
+     * @param bool        $convert_to_lowercase
+     * @param string      $glue
      *
-     * @return string
+     * @return string|null
      */
-    public static function slugify($string, $convert_to_lowercase = false, $glue = '-')
+    public static function slugify(?string $string, bool $convert_to_lowercase = false, string $glue = '-'): ?string
     {
+        if ($string === null) {
+            return null;
+        }
         if ($convert_to_lowercase) {
             $string = strtolower($string);
         }
