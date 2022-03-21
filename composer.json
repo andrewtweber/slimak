@@ -1,0 +1,40 @@
+{
+    "name": "andrewtweber/slimak",
+    "type": "library",
+    "description": "Slugged models for Laravel",
+    "keywords": [
+        "laravel",
+        "slugs",
+        "slugged",
+        "models"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Andrew Weber",
+            "homepage": "https://andrew.cool"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "laravel/framework": "^8.12|^9.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.17",
+        "phpunit/phpunit": "^9"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "Slimak\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Slimak\\Tests\\": "tests/"
+        }
+    }
+}
+

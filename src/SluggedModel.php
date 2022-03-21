@@ -1,4 +1,5 @@
 <?php
+
 namespace Slimak;
 
 use Illuminate\Database\Eloquent\Builder;

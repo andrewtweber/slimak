@@ -39,6 +39,6 @@ class Slugger
             $string = trim(preg_replace('/(' . $glue . ')+/', $glue, $string), $glue);
         }
 
-        return $string;
+        return empty($string) ? null : $string;
     }
 }
