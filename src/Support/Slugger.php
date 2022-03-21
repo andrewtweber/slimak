@@ -29,7 +29,7 @@ class Slugger
         }
 
         // Spell out ampersands and remove apostrophes from contractions
-        $string = str_replace(['&', "'"], ['and', ''], $string);
+        $string = str_replace(['&', "'"], [' and ', ''], $string);
 
         // Convert non alpha-numeric characters to glue pieces
         $string = preg_replace('/[^a-zA-Z0-9]/', $glue, strip_tags($string));

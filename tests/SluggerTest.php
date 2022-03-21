@@ -101,10 +101,11 @@ class SluggerTest extends TestCase
      * @testWith ["Slug's Test",   "Slugs-Test"]
      *           ["'Slug' Test",   "Slug-Test"]
      *           ["Slug'' Test",   "Slug-Test"]
+     *           ["Slug&Test",     "Slug-and-Test"]
      *           ["Slug & Test",   "Slug-and-Test"]
-     *           ["Slug'&'Test",   "SlugandTest"]
+     *           ["Slug'&'Test",   "Slug-and-Test"]
      *           ["Slug  &  Test", "Slug-and-Test"]
-     *           ["Slug && Test",  "Slug-andand-Test"]
+     *           ["Slug && Test",  "Slug-and-and-Test"]
      */
     public function conversions(?string $input, ?string $output)
     {
