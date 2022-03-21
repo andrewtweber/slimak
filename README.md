@@ -49,7 +49,7 @@ In case of duplicates, it will append a counter, e.g.:
 
 ```php
 $album2 = Album::create(['name' => 'My Test Album']);
-echo $album2->slug; // 'my-test-album1'
+echo $album2->slug; // 'my-test-album-1'
 ```
 
 You can also easily fetch models based on their slug:
@@ -134,3 +134,23 @@ that you can use in other places if you need it.
 
 I recommend using [Router binding](http://andrew.cool/blog/54/Router-Binding-in-Laravel)
 
+### Tests
+
+To run tests:
+
+```
+phpunit
+```
+
+### TODO
+
+Features:
+
+* Option to set slug back to null when model is deleted
+* Options easier to set on the fly (to make tests easier)
+* Re-use the `class_uses_deep` method
+
+Tests:
+
+* Case-sensitive slugs 
+* Reserved slugs
