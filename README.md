@@ -1,8 +1,10 @@
-## Ślimak
+# Ślimak
 
 Ślimak makes slugging easy for Laravel's Eloquent models.
 
-### Installation
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/andrewtweber/slimak/tree/master.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/gh/andrewtweber/slimak/tree/master)
+
+## Installation
 
 Given how small this package is, and how often people extend
 Eloquent, I think it's best to simply copy and paste the files
@@ -10,7 +12,7 @@ and modify them as you need.
 
 Might convert it to a trait and submit to packagist in the future.
 
-### Usage
+## Usage
 
 Basic usage. You simply need to extend the `SluggedModel` class.
 If your model has two columns, `name` and `slug`, it works out
@@ -22,7 +24,7 @@ class Album extends SluggedModel
 }
 ```
 
-#### Sample Migration
+### Sample Migration
 
 ```php
 Schema::create('albums', function (Blueprint $table) {
@@ -33,7 +35,7 @@ Schema::create('albums', function (Blueprint $table) {
 });
 ```
 
-#### Generating Slugs
+### Generating Slugs
 
 If you save an album, and it does not yet have a slug, it will
 generate a new one:
@@ -73,7 +75,7 @@ You can use this query scope to have more control over retrieving:
 $album = Album::whereSlug('my-test-album')->withTrashed()->first();
 ```
 
-#### Case-Sensitive Slugs
+### Case-Sensitive Slugs
 
 If your slugs are case-sensitive, modify your model to also use the
 provided trait.
@@ -90,7 +92,7 @@ class BlogPost extends SluggedModel
 Make sure to also disable converting to lowercase, if you're using the
 default slugger.
 
-### Configuration
+## Configuration
 
 The `SluggedModel` class has a few protected attributes that you can
 override per model.
@@ -130,11 +132,11 @@ class Album extends SluggedModel
 By default, `slugify` calls `Slugger::slugify`. This is a helpful method
 that you can use in other places if you need it.
 
-### Advanced
+## Advanced
 
 I recommend using [Router binding](http://andrew.cool/blog/54/Router-Binding-in-Laravel)
 
-### Tests
+## Tests
 
 To run tests:
 
@@ -142,7 +144,7 @@ To run tests:
 phpunit
 ```
 
-### TODO
+## TODO
 
 Features:
 
