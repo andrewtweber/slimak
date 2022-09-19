@@ -2,6 +2,8 @@
 
 namespace Slimak\Support;
 
+use Transliterator;
+
 /**
  * Class Slugger
  *
