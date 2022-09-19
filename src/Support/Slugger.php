@@ -24,6 +24,15 @@ class Slugger
         if ($string === null) {
             return null;
         }
+
+        // Transliterate accented characters
+        $transliterator = Transliterator::createFromRules(
+            ':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: NFC;',
+            Transliterator::FORWARD
+        );
+
+        $string = $transliterator->transliterate($string);
+
         if ($convert_to_lowercase) {
             $string = strtolower($string);
         }
