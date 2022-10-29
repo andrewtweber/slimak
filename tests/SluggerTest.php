@@ -111,4 +111,24 @@ class SluggerTest extends TestCase
     {
         $this->assertSame($output, Slugger::slugify($input));
     }
+
+    /**
+     * @test
+     *
+     * Note: some of the chars in the last test are intentionally not transliterated
+     * even though they look like upside-down letters. These are used for pronunciation
+     * and not in any language.
+     *
+     * @param string|null $input
+     * @param string|null $output
+     *
+     * @testWith ["A æ Übérmensch", "A-ae-Ubermensch"]
+     *           ["på høyeste nivå!", "pa-hoyeste-niva"]
+     *           ["И я люблю PHP! ﬁ", "I-a-lublu-PHP-fi"]
+     *           ["ẞ ß ʃaʁfəs ʔɛs", "SS-ss-a-f-s-es"]
+     */
+    public function accented_characters_are_transliterated(?string $input, ?string $output)
+    {
+        $this->assertSame($output, Slugger::slugify($input));
+    }
 }

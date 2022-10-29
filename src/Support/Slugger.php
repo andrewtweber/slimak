@@ -27,7 +27,11 @@ class Slugger
             return null;
         }
 
-        // Transliterate accented characters
+        /**
+         * Transliterate accented characters
+         *
+         * @see https://stackoverflow.com/a/26514376/704803
+         */
         $transliterator = Transliterator::createFromRules(
             ':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: NFC;',
             Transliterator::FORWARD
