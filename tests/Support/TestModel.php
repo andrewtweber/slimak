@@ -8,6 +8,9 @@ use Slimak\SluggedModel;
  * Class TestModel
  *
  * @package Slimak\Tests\Support
+ *
+ * @property string  $name
+ * @property ?string $slug
  */
 class TestModel extends SluggedModel
 {

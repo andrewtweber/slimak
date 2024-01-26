@@ -9,6 +9,9 @@ use Slimak\SluggedModel;
  * Class TestModelCaseSensitive
  *
  * @package Slimak\Tests\Support
+ *
+ * @property string  $name
+ * @property ?string $slug
  */
 class TestModelCaseSensitive extends SluggedModel
 {

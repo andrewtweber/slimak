@@ -45,16 +45,16 @@ class ModelTest extends LaravelTestCase
 
         // Lookup model
         $find = TestModel::findBySlug('slug-test');
-        $this->assertEquals($model->id, $find->id);
+        $this->assertEquals($model->getKey(), $find->getKey());
 
         // Lookup with scope
         $find_with_scope = TestModel::whereSlug('slug-test')->first();
-        $this->assertEquals($model->id, $find_with_scope->id);
+        $this->assertEquals($model->getKey(), $find_with_scope->getKey());
 
         // Lookup model with case-insensitive slug
         // Doesn't work with sqlite
         //$find_case_insensitive = TestModel::findBySlug('SLUG-TEST');
-        //$this->assertEquals($model->id, $find_case_insensitive->id);
+        //$this->assertEquals($model->getKey(), $find_case_insensitive->getKey());
 
         // Lookup model that doesn't exist
         $not_found = TestModel::findBySlug('doesnt-exist');
@@ -62,12 +62,12 @@ class ModelTest extends LaravelTestCase
 
         // Find or fail
         $find2 = TestModel::findBySlugOrFail('slug-test');
-        $this->assertEquals($model->id, $find2->id);
+        $this->assertEquals($model->getKey(), $find2->getKey());
 
         // Find or fail with case-insensitive slug
         // Doesn't work with sqlite
         //$find_case_insensitive2 = TestModel::findBySlugOrFail('SLUG-TEST');
-        //$this->assertEquals($model->id, $find_case_insensitive2->id);
+        //$this->assertEquals($model->getKey(), $find_case_insensitive2->getKey());
 
         // Find deleted
         $model->delete();
@@ -77,7 +77,7 @@ class ModelTest extends LaravelTestCase
         // Re-create model with same name
         $recreate = TestModel::create(['name' => 'Slug Test']);
         $this->assertSame('slug-test', $recreate->slug);
-        $this->assertNotEquals($model->id, $recreate->id);
+        $this->assertNotEquals($model->getKey(), $recreate->getKey());
 
         // Find or fail model that doesn't exist
         $this->expectException(ModelNotFoundException::class);
@@ -115,16 +115,16 @@ class ModelTest extends LaravelTestCase
 
         // Lookup model
         $find = TestModelSoftDeletes::findBySlug('slug-test');
-        $this->assertEquals($model->id, $find->id);
+        $this->assertEquals($model->getKey(), $find->getKey());
 
         // Lookup with scope
         $find_with_scope = TestModelSoftDeletes::whereSlug('slug-test')->first();
-        $this->assertEquals($model->id, $find_with_scope->id);
+        $this->assertEquals($model->getKey(), $find_with_scope->getKey());
 
         // Lookup model with case-insensitive slug
         // Doesn't work with sqlite
         //$find_case_insensitive = TestModelSoftDeletes::findBySlug('SLUG-TEST');
-        //$this->assertEquals($model->id, $find_case_insensitive->id);
+        //$this->assertEquals($model->getKey(), $find_case_insensitive->getKey());
 
         // Lookup model that doesn't exist
         $not_found = TestModelSoftDeletes::findBySlug('doesnt-exist');
@@ -132,12 +132,12 @@ class ModelTest extends LaravelTestCase
 
         // Find or fail
         $find2 = TestModelSoftDeletes::findBySlugOrFail('slug-test');
-        $this->assertEquals($model->id, $find2->id);
+        $this->assertEquals($model->getKey(), $find2->getKey());
 
         // Find or fail with case-insensitive slug
         // Doesn't work with sqlite
         //$find_case_insensitive2 = TestModelSoftDeletes::findBySlugOrFail('SLUG-TEST');
-        //$this->assertEquals($model->id, $find_case_insensitive2->id);
+        //$this->assertEquals($model->getKey(), $find_case_insensitive2->getKey());
 
         // Find deleted
         $model->delete();
@@ -146,14 +146,14 @@ class ModelTest extends LaravelTestCase
 
         // Find soft-deleted with scope
         $find_soft_deleted = TestModelSoftDeletes::whereSlug('slug-test')->withTrashed()->first();
-        $this->assertEquals($model->id, $find_soft_deleted->id);
+        $this->assertEquals($model->getKey(), $find_soft_deleted->getKey());
         $this->assertNotNull($find_soft_deleted->deleted_at);
 
         // Re-create model with same name
         // Recall that the old "slug-test-1" is now "renamed"
         $recreate = TestModelSoftDeletes::create(['name' => 'Slug Test']);
         $this->assertSame('slug-test-1', $recreate->slug);
-        $this->assertNotEquals($model->id, $recreate->id);
+        $this->assertNotEquals($model->getKey(), $recreate->getKey());
 
         // Find or fail model that doesn't exist
         $this->expectException(ModelNotFoundException::class);

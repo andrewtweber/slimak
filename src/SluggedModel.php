@@ -50,7 +50,7 @@ abstract class SluggedModel extends Model
      *
      * @param string $slug
      *
-     * @return static
+     * @return ?SluggedModel
      */
     public static function findBySlug($slug)
     {
@@ -62,7 +62,7 @@ abstract class SluggedModel extends Model
      *
      * @param string $slug
      *
-     * @return static
+     * @return ?SluggedModel
      * @throws ModelNotFoundException
      */
     public static function findBySlugOrFail($slug)
@@ -165,7 +165,7 @@ abstract class SluggedModel extends Model
                 $query = $query->where($this->getKeyName(), '!=', $this->getKey());
             }
             if ($this->usesSoftDeleteTrait()) {
-                $query = $query->withTrashed();
+                $query = $query->withTrashed(); /** @phpstan-ignore-line */
             }
 
             $exists = (in_array($slug, $this->reserved_slugs) || $query->first());
