@@ -50,11 +50,11 @@ abstract class SluggedModel extends Model
      *
      * @param string $slug
      *
-     * @return ?SluggedModel
+     * @return ?static
      */
     public static function findBySlug($slug)
     {
-        return self::whereSlug($slug)->first();
+        return static::whereSlug($slug)->first(); /** @phpstan-ignore-line */
     }
 
     /**
@@ -62,12 +62,12 @@ abstract class SluggedModel extends Model
      *
      * @param string $slug
      *
-     * @return ?SluggedModel
+     * @return ?static
      * @throws ModelNotFoundException
      */
     public static function findBySlugOrFail($slug)
     {
-        return self::whereSlug($slug)->firstOrFail();
+        return static::whereSlug($slug)->firstOrFail(); /** @phpstan-ignore-line */
     }
 
     /**
