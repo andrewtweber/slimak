@@ -18,12 +18,12 @@
     "require": {
         "php": "^8.2",
         "ext-intl": "*",
-        "laravel/framework": "^8.12|^9.0|^10.0|^11.0|^12.0"
+        "laravel/framework": "^10.0|^11.0|^12.0"
     },
     "require-dev": {
-        "larastan/larastan": "^1.0",
-        "orchestra/testbench": "^6.17",
-        "phpunit/phpunit": "^9"
+        "larastan/larastan": "^3.6",
+        "orchestra/testbench": "^10.4",
+        "phpunit/phpunit": "^11"
     },
     "config": {
         "sort-packages": true
